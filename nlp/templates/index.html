@@ -1,0 +1,180 @@
+{% extends "layout.html" %}
+
+{% block title %}Text Summarizer{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <!-- Hero Section -->
+        <div class="text-center mb-5">
+            <h1 class="display-4 mb-3">Text Summarizer</h1>
+            <p class="lead">Transform lengthy content into concise, informative summaries with our advanced NLP-powered tool.</p>
+        </div>
+        
+        <!-- Error Alert -->
+        {% if error %}
+        <div class="alert alert-danger mb-4" role="alert">
+            <i data-feather="alert-circle"></i> {{ error }}
+        </div>
+        {% endif %}
+        
+        <!-- Summarizer Form Card -->
+        <div class="card shadow mb-5">
+            <div class="card-header bg-primary text-white">
+                <h2 class="mb-0"><i data-feather="file-text"></i> Summarize Text or URL</h2>
+            </div>
+            <div class="card-body">
+                <ul class="nav nav-tabs mb-4" id="summarizerTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="text-tab" data-bs-toggle="tab" data-bs-target="#text-content" type="button" role="tab">
+                            <i data-feather="align-left"></i> Text
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="url-tab" data-bs-toggle="tab" data-bs-target="#url-content" type="button" role="tab">
+                            <i data-feather="link"></i> URL
+                        </button>
+                    </li>
+                </ul>
+                
+                <div class="tab-content" id="summarizerTabContent">
+                    <!-- Text Tab -->
+                    <div class="tab-pane fade show active" id="text-content" role="tabpanel">
+                        <form action="{{ url_for('summarize') }}" method="post">
+                            <input type="hidden" name="content_type" value="text">
+                            <div class="mb-3">
+                                <label for="textContent" class="form-label">Enter the text you want to summarize:</label>
+                                <textarea class="form-control" id="textContent" name="content" rows="10" placeholder="Paste your text here..." data-char-counter="textCounter" required></textarea>
+                                <div class="d-flex justify-content-end mt-2">
+                                    <small class="text-muted">Characters: <span id="textCounter">0</span></small>
+                                </div>
+                            </div>
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <button type="submit" class="btn btn-primary">
+                                    <i data-feather="zap"></i> Summarize Text
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- URL Tab -->
+                    <div class="tab-pane fade" id="url-content" role="tabpanel">
+                        <form action="{{ url_for('summarize') }}" method="post">
+                            <input type="hidden" name="content_type" value="url">
+                            <div class="mb-3">
+                                <label for="urlContent" class="form-label">Enter the URL of the content you want to summarize:</label>
+                                <input type="url" class="form-control" id="urlContent" name="content" placeholder="https://example.com/article" required>
+                                <div class="form-text">We'll extract the main content from the webpage automatically.</div>
+                            </div>
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <button type="submit" class="btn btn-primary">
+                                    <i data-feather="globe"></i> Summarize URL
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Features Section -->
+        <div class="row mt-5 mb-4">
+            <div class="col-12">
+                <h2 class="text-center mb-4">Key Features</h2>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="feature text-center">
+                    <div class="mb-3">
+                        <i data-feather="zap" class="feature-icon"></i>
+                    </div>
+                    <h4>Fast & Efficient</h4>
+                    <p>Quickly process large volumes of text and generate concise summaries.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="feature text-center">
+                    <div class="mb-3">
+                        <i data-feather="globe" class="feature-icon"></i>
+                    </div>
+                    <h4>Web Content</h4>
+                    <p>Summarize articles directly from URLs with our content extraction technology.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="feature text-center">
+                    <div class="mb-3">
+                        <i data-feather="clock" class="feature-icon"></i>
+                    </div>
+                    <h4>History</h4>
+                    <p>Access your previously summarized content in your summary history.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Usage Examples -->
+        <div class="card mt-5">
+            <div class="card-header bg-light">
+                <h3 class="mb-0">How It Works</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <i data-feather="file-text" style="width: 40px; height: 40px;"></i>
+                                </div>
+                                <h5>1. Input Content</h5>
+                                <p>Enter your text or provide a URL to an article you want to summarize.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <i data-feather="cpu" style="width: 40px; height: 40px;"></i>
+                                </div>
+                                <h5>2. Process</h5>
+                                <p>Our NLP algorithms analyze the content and identify the key information.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <i data-feather="check-circle" style="width: 40px; height: 40px;"></i>
+                                </div>
+                                <h5>3. Summarize</h5>
+                                <p>Get a concise summary that preserves the essential information from the original text.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // For textarea character counter
+        const textArea = document.getElementById('textContent');
+        const counter = document.getElementById('textCounter');
+        
+        if (textArea && counter) {
+            textArea.addEventListener('input', function() {
+                counter.textContent = this.value.length;
+            });
+        }
+    });
+</script>
+{% endblock %}

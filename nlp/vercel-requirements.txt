@@ -1,0 +1,15 @@
+email-validator
+flask
+flask-sqlalchemy
+gunicorn
+newspaper3k
+nltk
+numpy
+openai
+pickle-mixin
+psycopg2-binary
+scikit-learn
+sqlalchemy
+sumy
+trafilatura
+werkzeug

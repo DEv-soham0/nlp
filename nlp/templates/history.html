@@ -1,0 +1,173 @@
+{% extends "layout.html" %}
+
+{% block title %}Summary History{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h2 class="mb-0"><i data-feather="clock"></i> Summary History</h2>
+                {% if history %}
+                <form action="{{ url_for('clear_history') }}" method="post">
+                    <button type="submit" class="btn btn-sm btn-light">
+                        <i data-feather="trash-2"></i> Clear History
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                {% if history %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Original Content</th>
+                                    <th>Summary</th>
+                                    <th>Reduction</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in history %}
+                                <tr>
+                                    <td>{{ item.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                                    <td>
+                                        {% if item.content_type == 'text' %}
+                                            <span class="badge bg-primary">Text</span>
+                                        {% else %}
+                                            <span class="badge bg-info">URL</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if item.content_type == 'url' %}
+                                            <a href="{{ item.original_content }}" target="_blank" class="text-truncate d-inline-block" style="max-width: 200px;">
+                                                {{ item.original_content }}
+                                            </a>
+                                        {% else %}
+                                            <span class="text-truncate d-inline-block" style="max-width: 200px;">
+                                                {{ item.original_content[:100] }}{% if item.original_content|length > 100 %}...{% endif %}
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="text-truncate d-inline-block" style="max-width: 250px;">
+                                            {{ item.summary_text[:100] }}{% if item.summary_text|length > 100 %}...{% endif %}
+                                        </span>
+                                        <button class="btn btn-sm btn-outline-primary view-summary-btn" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#summaryModal" 
+                                                data-summary="{{ item.summary_text }}"
+                                                data-original="{% if item.content_type == 'text' %}{{ item.original_content }}{% else %}{{ item.original_content }}{% endif %}"
+                                                data-type="{{ item.content_type }}">
+                                            View
+                                        </button>
+                                    </td>
+                                    <td>{{ item.reduction_percentage }}%</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        <i data-feather="info"></i> Your summary history is empty. Create a summary to see it here!
+                    </div>
+                    <div class="text-center mt-4">
+                        <a href="{{ url_for('index') }}" class="btn btn-primary">
+                            <i data-feather="file-text"></i> Create a Summary
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Summary Modal -->
+<div class="modal fade" id="summaryModal" tabindex="-1" aria-labelledby="summaryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="summaryModalLabel">Summary Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-4">
+                    <h6><i data-feather="file-text"></i> Summary</h6>
+                    <div class="p-3 border rounded" id="modalSummary"></div>
+                </div>
+                <div>
+                    <h6><i data-feather="file"></i> Original Content</h6>
+                    <div id="modalOriginalUrl" class="mb-2 d-none">
+                        <strong>Source URL:</strong> <a href="#" id="modalUrl" target="_blank"></a>
+                    </div>
+                    <div class="p-3 border rounded" id="modalOriginal"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="modalCopyBtn">
+                    <i data-feather="clipboard"></i> Copy Summary
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Modal functionality
+    const summaryModal = document.getElementById('summaryModal');
+    const modalSummary = document.getElementById('modalSummary');
+    const modalOriginal = document.getElementById('modalOriginal');
+    const modalOriginalUrl = document.getElementById('modalOriginalUrl');
+    const modalUrl = document.getElementById('modalUrl');
+    const modalCopyBtn = document.getElementById('modalCopyBtn');
+    
+    // View summary button click handlers
+    const viewBtns = document.querySelectorAll('.view-summary-btn');
+    viewBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const summary = this.getAttribute('data-summary');
+            const original = this.getAttribute('data-original');
+            const type = this.getAttribute('data-type');
+            
+            modalSummary.textContent = summary;
+            
+            if (type === 'url') {
+                modalOriginalUrl.classList.remove('d-none');
+                modalUrl.textContent = original;
+                modalUrl.href = original;
+                modalOriginal.textContent = 'Content extracted from URL';
+            } else {
+                modalOriginalUrl.classList.add('d-none');
+                modalOriginal.textContent = original;
+            }
+            
+            // Re-initialize Feather icons in the modal
+            feather.replace();
+        });
+    });
+    
+    // Copy to clipboard functionality
+    modalCopyBtn.addEventListener('click', function() {
+        const summaryText = modalSummary.textContent;
+        navigator.clipboard.writeText(summaryText).then(function() {
+            // Change button text temporarily
+            const originalHtml = modalCopyBtn.innerHTML;
+            modalCopyBtn.innerHTML = '<i data-feather="check"></i> Copied!';
+            feather.replace();
+            
+            setTimeout(function() {
+                modalCopyBtn.innerHTML = originalHtml;
+                feather.replace();
+            }, 2000);
+        });
+    });
+});
+</script>
+{% endblock %}

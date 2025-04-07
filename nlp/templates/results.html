@@ -1,0 +1,125 @@
+{% extends "layout.html" %}
+
+{% block title %}Summary Results{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <!-- Results Card -->
+        <div class="card shadow mb-5">
+            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                <h2 class="mb-0"><i data-feather="check-circle"></i> Summary Results</h2>
+                <a href="{{ url_for('index') }}" class="btn btn-sm btn-light">
+                    <i data-feather="refresh-cw"></i> New Summary
+                </a>
+            </div>
+            <div class="card-body">
+                <!-- Statistics -->
+                <div class="results-stats mb-4">
+                    <div class="row">
+                        <div class="col-md-4 mb-3 mb-md-0">
+                            <div class="stat-card">
+                                <div class="stat-number">{{ result.original_length }}</div>
+                                <div class="stat-label">Original Words</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3 mb-md-0">
+                            <div class="stat-card">
+                                <div class="stat-number">{{ result.summary_length }}</div>
+                                <div class="stat-label">Summary Words</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <div class="stat-number">{{ result.reduction_percentage }}%</div>
+                                <div class="stat-label">Reduction</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Summary Content -->
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h3><i data-feather="file-text"></i> Summary</h3>
+                        <button class="btn btn-sm btn-outline-primary copy-btn" data-target="summaryContent">
+                            <i data-feather="clipboard"></i> Copy
+                        </button>
+                    </div>
+                    <div class="p-3 border rounded summary-content" id="summaryContent">
+                        {{ result.summary }}
+                    </div>
+                </div>
+
+                <!-- Original Content -->
+                <div>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h3><i data-feather="file"></i> Original Content</h3>
+                        {% if content_type == 'url' %}
+                        <a href="{{ content }}" target="_blank" class="btn btn-sm btn-outline-secondary">
+                            <i data-feather="external-link"></i> Visit Source
+                        </a>
+                        {% else %}
+                        <button class="btn btn-sm btn-outline-secondary copy-btn" data-target="originalContent">
+                            <i data-feather="clipboard"></i> Copy
+                        </button>
+                        {% endif %}
+                    </div>
+
+                    {% if content_type == 'url' %}
+                    <div class="alert alert-info mb-3">
+                        <strong>Source URL:</strong> <a href="{{ content }}" target="_blank">{{ content }}</a>
+                    </div>
+                    <div class="p-3 border rounded original-content" id="originalContent">
+                        <em>Content extracted from URL</em>
+                    </div>
+                    {% else %}
+                    <div class="p-3 border rounded original-content" id="originalContent">
+                        {{ content }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card-footer bg-light d-flex justify-content-between">
+                <a href="{{ url_for('index') }}" class="btn btn-primary">
+                    <i data-feather="plus"></i> Create New Summary
+                </a>
+                <a href="{{ url_for('history') }}" class="btn btn-outline-secondary">
+                    <i data-feather="clock"></i> View History
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const copyButtons = document.querySelectorAll('.copy-btn');
+        
+        copyButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const contentToCopy = document.getElementById(targetId);
+                
+                if (contentToCopy) {
+                    navigator.clipboard.writeText(contentToCopy.textContent).then(function() {
+                        // Show success indicator
+                        const originalHtml = button.innerHTML;
+                        button.innerHTML = '<i data-feather="check"></i> Copied!';
+                        feather.replace();
+                        
+                        setTimeout(function() {
+                            button.innerHTML = originalHtml;
+                            feather.replace();
+                        }, 2000);
+                    }).catch(function() {
+                        console.error('Failed to copy text');
+                    });
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

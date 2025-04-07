@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block title %}Error{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-danger text-white">
+                <h2 class="mb-0"><i data-feather="alert-triangle"></i> Error</h2>
+            </div>
+            <div class="card-body text-center py-5">
+                <div class="error-icon mb-4">
+                    <i data-feather="alert-circle" style="width: 64px; height: 64px;"></i>
+                </div>
+                <h3>{{ error }}</h3>
+                <p class="lead mt-3">Something went wrong. Please try again.</p>
+                <div class="mt-4">
+                    <a href="{{ url_for('index') }}" class="btn btn-primary">
+                        <i data-feather="home"></i> Return to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

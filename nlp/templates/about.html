@@ -1,0 +1,110 @@
+{% extends "layout.html" %}
+
+{% block title %}About Text Summarizer{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h2 class="mb-0"><i data-feather="info"></i> About Text Summarizer</h2>
+            </div>
+            <div class="card-body">
+                <h3>How It Works</h3>
+                <p class="lead">
+                    Our text summarizer uses advanced Natural Language Processing (NLP) techniques to create concise summaries that maintain the key points of the original content.
+                </p>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <h4><i data-feather="cpu"></i> Technology</h4>
+                            </div>
+                            <div class="card-body">
+                                <p>Text Summarizer combines multiple approaches to deliver high-quality summaries:</p>
+                                <ul>
+                                    <li><strong>Extractive Summarization:</strong> Identifies and extracts the most important sentences from the original text.</li>
+                                    <li><strong>Natural Language Processing:</strong> Analyzes the structure and meaning of the text to understand its key components.</li>
+                                    <li><strong>AI-Powered Summarization:</strong> Uses advanced language models to generate concise, coherent summaries (when API key is available).</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <h4><i data-feather="globe"></i> Web Content</h4>
+                            </div>
+                            <div class="card-body">
+                                <p>Our URL summarization capabilities include:</p>
+                                <ul>
+                                    <li><strong>Content Extraction:</strong> Automatically pulls the main article content from web pages, filtering out navigation, ads, and other non-essential elements.</li>
+                                    <li><strong>Smart Processing:</strong> Handles various website formats and structures to extract meaningful content.</li>
+                                    <li><strong>Citation Preservation:</strong> Maintains the original source for proper attribution.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 class="mt-4">Use Cases</h3>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card mb-4 h-100">
+                            <div class="card-body text-center">
+                                <div class="feature-icon-lg mb-3">
+                                    <i data-feather="book"></i>
+                                </div>
+                                <h5>Academic Research</h5>
+                                <p>Quickly digest research papers and academic articles to identify relevant information for your studies.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card mb-4 h-100">
+                            <div class="card-body text-center">
+                                <div class="feature-icon-lg mb-3">
+                                    <i data-feather="briefcase"></i>
+                                </div>
+                                <h5>Business Intelligence</h5>
+                                <p>Stay on top of industry news and reports by getting concise summaries of lengthy documents.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card mb-4 h-100">
+                            <div class="card-body text-center">
+                                <div class="feature-icon-lg mb-3">
+                                    <i data-feather="coffee"></i>
+                                </div>
+                                <h5>Daily Reading</h5>
+                                <p>Save time by summarizing news articles and blog posts for quick consumption during your busy day.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 class="mt-4">Privacy</h3>
+                <p>
+                    We respect your privacy. Your data is used only for the purpose of generating summaries and maintaining your summary history for your convenience. We do not share your data with third parties.
+                </p>
+                
+                <h3 class="mt-4">Feedback</h3>
+                <p>
+                    We're constantly working to improve our summarization algorithms. Your feedback on summary quality helps us enhance the service.
+                </p>
+                
+                <div class="text-center mt-4">
+                    <a href="{{ url_for('index') }}" class="btn btn-primary">
+                        <i data-feather="file-text"></i> Try the Summarizer
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
